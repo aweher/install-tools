@@ -43,6 +43,7 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 | filebeat    | Shipper de logs de Elastic hacia Graylog/Logstash; **solo Linux** |
 | basics      | Instala un set de herramientas básicas vía apt; **solo Linux** |
 | bash-tuning | Tuning idempotente de bash (history, aliases, funciones); **solo Linux** |
+| snmpd       | Agente Net-SNMP con config para LibreNMS; **solo Linux** |
 
 > `restic` y `mc` se instalan ejecutando sus scripts oficiales
 > (`curl … | bash`), no descargando el binario directamente. En Debian/Ubuntu,
@@ -85,6 +86,18 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 >
 > ```bash
 > BASH_TUNING_HOME=/root ./install.sh bash-tuning
+> ```
+
+> `snmpd` solo funciona en Linux/Debian: instala `snmp snmpd
+> snmp-mibs-downloader`, escribe `/etc/snmp/snmpd.conf` y `/etc/default/snmpd`,
+> descarga el script `distro` de LibreNMS a `/usr/local/bin` y habilita el
+> servicio. **Consulta** `community`, `sysLocation` y `sysContact`: usa las
+> variables de entorno si están definidas, si no las pregunta (cuando hay
+> terminal) y, en último caso, aplica los valores por defecto.
+>
+> ```bash
+> SNMPD_COMMUNITY=secreta SNMPD_SYSLOCATION="DC Norte" \
+>   SNMPD_SYSCONTACT="NOC <noc@midominio.com>" ./install.sh snmpd
 > ```
 
 > `acme.sh` no es un binario: se instala con su propio `--install` en
