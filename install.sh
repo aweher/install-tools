@@ -14,8 +14,12 @@ needs_bootstrap() {
 bootstrap_and_run() {
   command -v curl >/dev/null 2>&1 || { echo "curl requerido" >&2; exit 1; }
   command -v tar  >/dev/null 2>&1 || { echo "tar requerido" >&2; exit 1; }
-  local tmp; tmp="$(mktemp -d)"
-  trap 'rm -rf "$tmp"' EXIT
+  # tmp is intentionally NOT local: the EXIT trap below runs after this
+  # function's frame is gone (e.g. when set -e aborts on inner failure), so a
+  # local would be out of scope and `set -u` would crash on "$tmp".
+  tmp=""
+  trap 'if [ -n "${tmp:-}" ]; then rm -rf "$tmp"; fi' EXIT
+  tmp="$(mktemp -d)"
   echo "==> descargando install-tools…" >&2
   curl -fsSL "$REPO_TARBALL" | tar -xz -C "$tmp" --strip-components=1 \
     || { echo "fallo al descargar el repo" >&2; exit 1; }
