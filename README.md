@@ -44,6 +44,7 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 | basics      | Instala un set de herramientas básicas vía apt; **solo Linux** |
 | bash-tuning | Tuning idempotente de bash (history, aliases, funciones); **solo Linux** |
 | snmpd       | Agente Net-SNMP con config para LibreNMS; **solo Linux** |
+| serial-console | Habilita consola serie (getty + GRUB); **solo Linux** |
 
 > `restic` y `mc` se instalan ejecutando sus scripts oficiales
 > (`curl … | bash`), no descargando el binario directamente. En Debian/Ubuntu,
@@ -98,6 +99,18 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 > ```bash
 > SNMPD_COMMUNITY=secreta SNMPD_SYSLOCATION="DC Norte" \
 >   SNMPD_SYSCONTACT="NOC <noc@midominio.com>" ./install.sh snmpd
+> ```
+
+> `serial-console` solo funciona en Linux: por cada puerto habilita un getty
+> (systemd `serial-getty@`, con fallback a upstart `/etc/init/<puerto>.conf`) y
+> apunta la consola de GRUB al primer puerto serie editando
+> `GRUB_CMDLINE_LINUX` en `/etc/default/grub` (con backup `.000`) y regenerando
+> (`update-grub` o `grub2-mkconfig`). Por defecto `ttyS0 ttyS1` a `115200`.
+> **Requiere reiniciar** para aplicar GRUB. Personaliza con `SERIAL_PORTS` /
+> `SERIAL_BAUD`; `SERIAL_SKIP_GRUB` evita tocar GRUB:
+>
+> ```bash
+> SERIAL_PORTS="ttyS0" SERIAL_BAUD=115200 ./install.sh serial-console
 > ```
 
 > `acme.sh` no es un binario: se instala con su propio `--install` en
