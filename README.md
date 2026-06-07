@@ -36,6 +36,46 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 | Herramienta | Descripción |
 |-------------|-------------|
 | chisel      | Túnel TCP/UDP rápido sobre HTTP (jpillora/chisel) |
+| acme.sh     | Cliente ACME/Let's Encrypt (acmesh-official/acme.sh) |
+| restic      | Backup rápido y seguro (vía restic-install.arreg.la) |
+| mc          | Cliente MinIO, se instala como `m` (vía minioclient-install.arreg.la) |
+| maldet      | Linux Malware Detect (LMD); **solo Linux**, requiere systemd |
+| filebeat    | Shipper de logs de Elastic hacia Graylog/Logstash; **solo Linux** |
+
+> `restic` y `mc` se instalan ejecutando sus scripts oficiales
+> (`curl … | bash`), no descargando el binario directamente. En Debian/Ubuntu,
+> `restic` además fija un pin de apt e instala `bzip2`. Ambos ignoran el destino
+> `/usr/local/bin` (el script decide la ubicación). `mc` queda disponible como
+> el comando `m`.
+
+> `maldet` solo funciona en Linux: instala `inotify-tools`, clona
+> [rfxn/linux-malware-detect](https://github.com/rfxn/linux-malware-detect),
+> ejecuta su `install.sh`, escribe `conf.maldet` + `monitor_paths` en
+> `/usr/local/maldetect` y habilita el servicio systemd. Define `MALDET_EMAIL`
+> para el destino de alertas (por defecto `noc@ayuda.la`):
+>
+> ```bash
+> MALDET_EMAIL=noc@tudominio.com ./install.sh maldet
+> ```
+
+> `filebeat` solo funciona en Linux: añade el repo APT de Elastic, instala el
+> paquete, escribe `/etc/filebeat/filebeat.yml` (envía `/var/log/*.log` al host
+> Graylog/Logstash), habilita el módulo `system` y el servicio systemd. Por
+> defecto usa `loghost` y lo mapea a `127.5.1.4` en `/etc/hosts`. Personaliza
+> con `FILEBEAT_GRAYLOG_HOST` (si no es `loghost`, no se toca `/etc/hosts`):
+>
+> ```bash
+> FILEBEAT_GRAYLOG_HOST=syslog.midominio.com ./install.sh filebeat
+> ```
+
+> `acme.sh` no es un binario: se instala con su propio `--install` en
+> `~/.acme.sh` (alias + cron de auto-renovación), por lo que se ignora el
+> destino `/usr/local/bin`. Define `ACME_SH_EMAIL` para registrar un email de
+> cuenta durante la instalación:
+>
+> ```bash
+> ACME_SH_EMAIL=tu@email.com ./install.sh acme.sh
+> ```
 
 ## Añadir una herramienta
 
