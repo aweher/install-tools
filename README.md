@@ -45,6 +45,7 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 | bash-tuning | Tuning idempotente de bash (history, aliases, funciones); **solo Linux** |
 | snmpd       | Agente Net-SNMP con config para LibreNMS; **solo Linux** |
 | serial-console | Habilita consola serie (getty + GRUB); **solo Linux** |
+| oh-my-tmux  | Configuración de tmux gpakosz/.tmux (Linux y macOS) |
 
 > `restic` y `mc` se instalan ejecutando sus scripts oficiales
 > (`curl … | bash`), no descargando el binario directamente. En Debian/Ubuntu,
@@ -112,6 +113,12 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 > ```bash
 > SERIAL_PORTS="ttyS0" SERIAL_BAUD=115200 ./install.sh serial-console
 > ```
+
+> `oh-my-tmux` funciona en Linux y macOS: asegura `tmux` (apt o brew), clona
+> [gpakosz/.tmux](https://github.com/gpakosz/.tmux) en `~/.tmux`, crea el
+> symlink `~/.tmux.conf` y siembra `~/.tmux.conf.local` **sin sobrescribirlo**
+> si ya existe. Idempotente (si `~/.tmux` ya está, no re-clona). Escribe en
+> `$HOME`; usá `OH_MY_TMUX_HOME` para apuntar a otro home.
 
 > `acme.sh` no es un binario: se instala con su propio `--install` en
 > `~/.acme.sh` (alias + cron de auto-renovación), por lo que se ignora el
