@@ -42,6 +42,7 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 | maldet      | Linux Malware Detect (LMD); **solo Linux**, requiere systemd |
 | filebeat    | Shipper de logs de Elastic hacia Graylog/Logstash; **solo Linux** |
 | basics      | Instala un set de herramientas básicas vía apt; **solo Linux** |
+| bash-tuning | Tuning idempotente de bash (history, aliases, funciones); **solo Linux** |
 
 > `restic` y `mc` se instalan ejecutando sus scripts oficiales
 > (`curl … | bash`), no descargando el binario directamente. En Debian/Ubuntu,
@@ -74,6 +75,17 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 > qemu-guest-agent, etc.), fija `vim` como editor por defecto y activa
 > `liquidprompt`. Si algún paquete falla, reintenta uno por uno e informa los
 > que no pudo instalar.
+
+> `bash-tuning` aplica un tuning de bash a los dotfiles del usuario actual
+> (`~/.bashrc`, `~/.bash_aliases`, `~/.bash_functions`): formato de history,
+> aliases (`..`, `usage10`, `ip -color`, …) y funciones (`crearvenv`,
+> `mygrants`). Es **idempotente**: cada bloque va entre marcadores y solo se
+> agrega si falta, sin pisar contenido existente. Escribe en `$HOME` (sin
+> `sudo`); usa `BASH_TUNING_HOME` para apuntar a otro home (p. ej. `/root`):
+>
+> ```bash
+> BASH_TUNING_HOME=/root ./install.sh bash-tuning
+> ```
 
 > `acme.sh` no es un binario: se instala con su propio `--install` en
 > `~/.acme.sh` (alias + cron de auto-renovación), por lo que se ignora el
