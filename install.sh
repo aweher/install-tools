@@ -139,7 +139,8 @@ run_tui() {
     meta="$(tool_meta "$f")"; name="${meta%%|*}"; desc="${meta#*|}"
     # shellcheck disable=SC1090
     if ( source "$f"; tool_supported "$os" "$arch" ); then
-      selectable+=("$name")
+      # Display "name  desc"; the name is the first whitespace-delimited token.
+      selectable+=("$(printf '%-12s %s' "$name" "$desc")")
     fi
   done < <(list_tool_files)
 
@@ -151,12 +152,13 @@ run_tui() {
 
   [ -n "$selected" ] || { warn "no se seleccionó nada"; return 0; }
 
-  gum confirm "¿Instalar: $(echo "$selected" | tr '\n' ' ')?" \
+  gum confirm "¿Instalar: $(printf '%s\n' "$selected" | awk 'NF{print $1}' | tr '\n' ' ')?" \
     || { warn "cancelado"; return 0; }
 
-  local item file
-  while IFS= read -r item; do
-    [ -n "$item" ] || continue
+  local line item file
+  while IFS= read -r line; do
+    [ -n "$line" ] || continue
+    item="${line%% *}"
     file="$(find_tool_file "$item")" || { warn "desconocida: $item"; continue; }
     # shellcheck disable=SC2016
     if gum spin --title="Instalando ${item}…" -- \

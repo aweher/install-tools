@@ -41,6 +41,7 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 | mc          | Cliente MinIO, se instala como `m` (vía minioclient-install.arreg.la) |
 | maldet      | Linux Malware Detect (LMD); **solo Linux**, requiere systemd |
 | filebeat    | Shipper de logs de Elastic hacia Graylog/Logstash; **solo Linux** |
+| basics      | Instala un set de herramientas básicas vía apt; **solo Linux** |
 
 > `restic` y `mc` se instalan ejecutando sus scripts oficiales
 > (`curl … | bash`), no descargando el binario directamente. En Debian/Ubuntu,
@@ -67,6 +68,12 @@ Los binarios se instalan en `/usr/local/bin` (usa `sudo` si hace falta).
 > ```bash
 > FILEBEAT_GRAYLOG_HOST=syslog.midominio.com ./install.sh filebeat
 > ```
+
+> `basics` solo funciona en Linux/Debian: instala vía `apt` un set de
+> herramientas (git, vim, nmap, ripgrep, tmux, ufw, fail2ban, rkhunter, snmp,
+> qemu-guest-agent, etc.), fija `vim` como editor por defecto y activa
+> `liquidprompt`. Si algún paquete falla, reintenta uno por uno e informa los
+> que no pudo instalar.
 
 > `acme.sh` no es un binario: se instala con su propio `--install` en
 > `~/.acme.sh` (alias + cron de auto-renovación), por lo que se ignora el
